@@ -1,5 +1,24 @@
-.App {
+/* .App {
   text-align: center;
+} */
+
+.container {
+  max-width: 360px;
+  max-height: 1000px;
+  /* margin: 0 auto;
+  padding: 5px; */
+  display: flex;
+  
+}
+.item {
+  background: blue;
+  width: 1500px;
+  margin: 5px;
+  color: white;
+  height: 50px;
+  /* text-align: left; */
+  line-height: 50px;
+  width: 50px;
 }
 
 .App-logo {
