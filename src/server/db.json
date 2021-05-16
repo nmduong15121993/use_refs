@@ -1,16 +1,8 @@
 {
   "todos": [
     {
-      "dataInput": "duong",
+      "dataInput": "123",
       "id": 1
-    },
-    {
-      "dataInput": "nguyen duong",
-      "id": 2
-    },
-    {
-      "dataInput": "nguyen minh duong",
-      "id": 3
     }
   ],
   "products": [

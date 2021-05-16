@@ -1,12 +1,12 @@
-import React from 'react'
+import React from 'react';
+import styles from './listItem.module.css';
 
 const ListItem = ({ dataInput, onhandleDelete }) => {
 
   const element = dataInput.map((data) => {
     return(
       <div 
-        className="container" 
-        style={{border: "1px solid red", margin: "5px" }}
+        className={`container ${styles.todo}`}
         key={ data.id } 
       >
         <label style={{ width: "500px" }} className="item item2" >

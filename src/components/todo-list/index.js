@@ -1,59 +1,65 @@
 import React from 'react';
-import axios from 'axios';
-import { ListItem } from './list-item';
-import { URL_API } from './../../common/constants';
+import { byID, createElement } from '../helper/dom';
+import styles from './todo-list.module.css';
 
 const TodoList = () => {
   const ref = React.useRef(null);
-  const [dataInput, setDataInput] = React.useState([]);
 
-  React.useEffect(() => {
-    const getData = async () => {
-      try {
-        const { data } = await axios.get(URL_API)
-        setDataInput(data);
-      } catch (error) {
-        console.log(error);
-      }
+  function addTodo(newTodos) {
+    const todosListDOM = byID('todos-list');
+    const deleteBtn = createElement('span', styles.deleteBtn);
+    deleteBtn.innerHTML = 'x';
+    deleteBtn.onclick = function({ target }) {
+      todosListDOM.removeChild(target.parentNode);
     };
-    getData();
-  }, []);
+    const newTodo = createElement('div', 'todo-item');
+    newTodo.innerHTML = `<div class="todo-content">${newTodos}</div>`;
+    newTodo.appendChild(deleteBtn);
+    todosListDOM.appendChild(newTodo);
+    ref.current.value = '';
+  }
 
+  /**
+   * Xem có dữ liệu ở input không, và nếu người dùng ấn enter và có dữ liệu ở input thì xử lý
+   * 1. Tìm DOM chứa các todos
+   * 2. Tạo ra 1 cái thẻ div và append vào
+   */
   const onhandleEnter = async ({ keyCode }) => {
     const dataSend = ref.current.value;
     if(keyCode === 13 && dataSend) {
-      try {
-        const { data } = await axios.post(URL_API, { dataInput: dataSend }) 
-        setDataInput(dataInput.concat(data));
-      } catch (error) {
-        console.log(error);
-      } finally {
-        ref.current.value = "";
-      }
+      addTodo(dataSend);
     }
   };
 
-  const onhandleDelete = async (id) => {
-    const { status } = await axios.delete(`${URL_API}/${id}`);
-    if(status === 200) {
-      const newData = dataInput.filter((item) => item.id !== id);
-      setDataInput(newData);
-    }
-  };
+  function saveTodos() {
+    const todosListDOM = byID('todos-list');
+    const allTodos = [];
+
+    todosListDOM.querySelectorAll('.todo-content').forEach((todoDOM) => {
+      allTodos.push(todoDOM.innerHTML);
+    });
+
+    console.log('all todos', allTodos);
+  }
+
+  React.useEffect(() => {
+    const todosMock = ['minh duong', 'nguyen dung'];
+    todosMock.forEach((todo) => {
+      addTodo(todo);
+    });
+  }, []);
 
   return (
     <div>
       <h1> Todo List </h1>
       <input
-        ref={ ref }
+        ref={ref}
         placeholder="Typing data"
-        onKeyDown={(key) => onhandleEnter(key)}
-        style={{
-          width: "350px",
-          margin: "10px"
-        }}
+        onKeyDown={onhandleEnter}
+        className={styles.inputTodo}
       />
-      <ListItem  dataInput={dataInput} onhandleDelete={onhandleDelete} />
+      <div id="todos-list" />
+      <div className={styles.saveBtn} onClick={saveTodos}>Save</div>
     </div>
   )
 }
